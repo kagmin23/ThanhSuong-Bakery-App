@@ -1,8 +1,9 @@
 import { Layout, Text } from '@ui-kitten/components'; // UI Kitten imports
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { useAnimatedStyle, withSpring } from 'react-native-reanimated'; // Reanimated imports
 
-export const ProfileScreen = () => {
+export const CartScreen = () => {
   // Reanimated: Animation for the title
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -13,10 +14,10 @@ export const ProfileScreen = () => {
   return (
     <Layout style={styles.container}>
       <Text category="h1" style={[styles.title, animatedStyle]}>
-        Trang Cá Nhân
+        Giỏ Hàng
       </Text>
       <Text category="s1" style={styles.subtitle}>
-        Thông tin của bạn sẽ hiển thị tại đây.
+        Các sản phẩm bạn đã chọn sẽ hiển thị ở đây.
       </Text>
     </Layout>
   );
