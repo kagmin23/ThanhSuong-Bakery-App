@@ -1,6 +1,7 @@
 import { Layout, Text } from '@ui-kitten/components'; // UI Kitten imports
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { useAnimatedStyle, withSpring } from 'react-native-reanimated'; // Reanimated imports
 
 export const ProfileScreen = () => {
   // Reanimated: Animation for the title
