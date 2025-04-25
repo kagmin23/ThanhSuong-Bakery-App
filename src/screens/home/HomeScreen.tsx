@@ -1,20 +1,27 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Layout, Text } from "@ui-kitten/components";
 import React, { useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
-import { useAnimatedStyle, withSpring } from "react-native-reanimated";
+import { FlatList, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CategoryPills, HeaderBackground, ProductCard, SearchBar } from "../../components/common";
-import { CATEGORIES, SAMPLE_PRODUCTS } from "../../data/products";
-import { BakeryProduct } from "../../types/product.types";
+import {
+  CategoryPills,
+  HeaderBackground,
+  HeaderSection,
+  ProductCard,
+  SearchBar,
+} from "../../components";
+import { notifications } from "../../data/notifications"; // Import notifications
+import { CATEGORIES, SAMPLE_PRODUCTS } from "../../data/products/products";
+import { BakeryProduct } from "../../types/products.types";
+import styles from "./styles";
 
 export const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [products, setProducts] = useState<BakeryProduct[]>(SAMPLE_PRODUCTS);
+  const [showAllNotifications, setShowAllNotifications] = useState(false);
 
-  // Filter products based on category and search query
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
       selectedCategory === "Tất cả" || product.category === selectedCategory;
@@ -24,7 +31,6 @@ export const HomeScreen = () => {
     return matchesCategory && matchesSearch;
   });
 
-  // Toggle favorite status
   const handleToggleFavorite = (id: string) => {
     setProducts(
       products.map((product) =>
@@ -35,101 +41,79 @@ export const HomeScreen = () => {
     );
   };
 
-  // Add product to cart
   const handleAddToCart = (id: string) => {
-    console.log(`Thêm sản phẩm ${id} vào giỏ hàng`);
   };
 
-  // Animated style for the header title
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: withSpring(0) }],
-    };
-  });
+  const handleNotificationPress = () => {
+  };
+
+  const toggleShowAllNotifications = () => {
+    setShowAllNotifications(!showAllNotifications);
+  };
 
   return (
-    <Layout style={[styles.container, { paddingTop: insets.top + 16 }]}>
-      {/* Header with gradient */}
-      <HeaderBackground />
-
-      {/* Header content */}
+    <Layout style={[styles.container, { paddingTop: insets.top}]}>
+      <StatusBar backgroundColor="#3498db" barStyle="light-content" />
+      {/* Header Section */}
       <Layout style={styles.header}>
-        <Text category="h1" style={[styles.title, animatedStyle]}>
-          Tiệm Bánh Thanh Sương
-        </Text>
-        {/* Search bar */}
-        <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
-      </Layout>
-
-      {/* Category pills */}
-      <Layout style={styles.categoryContainer}>
-        <CategoryPills
-          categories={CATEGORIES}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
+        <HeaderSection
+          name="Phan Kang Min"
+          avatarUrl="https://i.pravatar.cc/150?img=12"
+          notifications={notifications.slice(
+            0,
+            showAllNotifications ? notifications.length : 6
+          )}
+          onNotificationPress={handleNotificationPress}
+          showAllNotifications={showAllNotifications}
+          toggleShowAllNotifications={toggleShowAllNotifications}
         />
       </Layout>
 
-      {/* Product list */}
-      <Layout style={styles.productListContainer}>
-        {filteredProducts.length > 0 ? (
-          <FlatList
-            data={filteredProducts}
-            numColumns={2}
-            renderItem={({ item }) => (
-              <ProductCard
-                product={item}
-                onToggleFavorite={handleToggleFavorite}
-                onAddToCart={handleAddToCart}
+      {/* Fixed Search Bar */}
+      <Layout style={styles.searchContainer}>
+        <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
+      </Layout>
+
+      {/* Scrollable Content */}
+      <FlatList
+        ListHeaderComponent={
+          <>
+            <HeaderBackground />
+            <Layout style={styles.categoryContainer}>
+              <CategoryPills
+                categories={CATEGORIES}
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
               />
-            )}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+            </Layout>
+          </>
+        }
+        data={filteredProducts}
+        numColumns={2}
+        renderItem={({ item }) => (
+          <ProductCard
+            product={item}
+            onToggleFavorite={handleToggleFavorite}
+            onAddToCart={handleAddToCart}
           />
-        ) : (
+        )}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingTop: 80,
+          paddingBottom: insets.bottom + 16,
+        }}
+        ListEmptyComponent={
           <Layout style={styles.noResultsContainer}>
             <Ionicons name="search-outline" size={60} color="#ccc" />
             <Text style={styles.noResultsText}>
               Không tìm thấy sản phẩm nào
             </Text>
           </Layout>
-        )}
-      </Layout>
+        }
+      />
     </Layout>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingBottom: 20,
-  },
-  title: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  categoryContainer: {
-    paddingTop: 10,
-  },
-  productListContainer: {
-    flex: 1,
-    paddingHorizontal: 8,
-    paddingTop: 10,
-  },
-  noResultsContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 100,
-  },
-  noResultsText: {
-    fontSize: 18,
-    color: "#8F9BB3",
-    marginTop: 16,
-  },
-});
+export default HomeScreen;

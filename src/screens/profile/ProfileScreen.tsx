@@ -1,10 +1,9 @@
-import { Layout, Text } from '@ui-kitten/components'; // UI Kitten imports
+import { Layout, Text } from '@ui-kitten/components';
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { useAnimatedStyle, withSpring } from 'react-native-reanimated'; // Reanimated imports
+import { useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import styles from './styles';
 
 export const ProfileScreen = () => {
-  // Reanimated: Animation for the title
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: withSpring(0) }],
@@ -23,18 +22,4 @@ export const ProfileScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  title: {
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    marginTop: 8,
-    color: '#8F9BB3', // UI Kitten's gray10 equivalent or adjust as necessary
-  },
-});
+export default ProfileScreen;

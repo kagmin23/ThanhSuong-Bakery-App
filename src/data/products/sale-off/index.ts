@@ -1,0 +1,58 @@
+import { SaleOffProduct } from "../../../types/products.types";
+
+export const SALE_OFF_ITEMS: SaleOffProduct[] = [
+  {
+    id: "s1",
+    name: "Bánh Mì Phô Mai Bơ Tỏi",
+    price: 35000,
+    discount: 20,
+    category: "Bánh mì",
+    imageUrl: "https://birthdaylovecake.com/wp-content/uploads/2022/03/Banh-sinh-nhat-vuong-mien-sang-trong-1.jpg",
+    isFavorite: true,
+  },
+  {
+    id: "s2",
+    name: "Bánh Kem",
+    price: 25000,
+    discount: 15,
+    category: "Bánh ngọt",
+    imageUrl: "https://via.placeholder.com/100x100.png?text=Su+Kem",
+    isFavorite: true,
+  },
+  {
+    id: "s3",
+    name: "Bánh Flan Caramel",
+    price: 20000,
+    discount: 10,
+    category: "Tráng miệng",
+    imageUrl: "https://via.placeholder.com/100x100.png?text=Flan",
+    isFavorite: false,
+  },
+  {
+    id: "s4",
+    name: "Tiramisu",
+    price: 45000,
+    discount: 25,
+    category: "Bánh lạnh",
+    imageUrl: "https://via.placeholder.com/100x100.png?text=Tiramisu",
+    isFavorite: false,
+  },
+  {
+    id: "s5",
+    name: "Bánh Red Velvet",
+    price: 50000,
+    discount: 30,
+    category: "Bánh ngọt",
+    imageUrl: "https://via.placeholder.com/100x100.png?text=Red+Velvet",
+    isFavorite: true,
+  },
+  {
+    id: "s6",
+    name: "Bánh Bông Lan Trứng Muối",
+    price: 40000,
+    discount: 18,
+    category: "Bánh mặn",
+    imageUrl: "https://via.placeholder.com/100x100.png?text=Bông+Lan",
+    isFavorite: false,
+  },
+];

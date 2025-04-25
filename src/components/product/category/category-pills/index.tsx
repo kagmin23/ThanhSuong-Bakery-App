@@ -1,5 +1,6 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { ScrollView, Text, TouchableOpacity } from "react-native";
+import styles from "./styles";
 
 interface CategoryPillsProps {
   categories: string[];
@@ -40,35 +41,5 @@ export const CategoryPills = ({
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 10,
-  },
-  button: {
-    marginRight: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  selectedButton: {
-    backgroundColor: "#FF8C00", // Replace with your color for selected
-    borderColor: "#FF8C00", // Replace with your color for selected border
-  },
-  unselectedButton: {
-    backgroundColor: "transparent",
-    borderColor: "#B0B0B0", // Replace with your color for unselected border
-  },
-  text: {
-    fontSize: 14,
-  },
-  selectedText: {
-    color: "white", // White text for selected category
-  },
-  unselectedText: {
-    color: "#B0B0B0", // Gray text for unselected category
-  },
-});
 
 export default CategoryPills;

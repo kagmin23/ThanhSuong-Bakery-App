@@ -1,9 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { BakeryProduct } from "../../../../types/product.types";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { BakeryProduct } from "../../../../types/products.types";
+import { styles } from "./styles";
 
-// DiscountTag component
 export const DiscountTag = ({ discount }: { discount: number }) => {
   return (
     <View style={styles.discountTag}>
@@ -12,18 +12,17 @@ export const DiscountTag = ({ discount }: { discount: number }) => {
   );
 };
 
-// ProductCard component
-interface ProductCardProps {
+interface SaleOffCardProps {
   product: BakeryProduct;
   onToggleFavorite: (id: string) => void;
   onAddToCart: (id: string) => void;
 }
 
-export const ProductCard = ({
+export const SaleOffCard = ({
   product,
   onToggleFavorite,
   onAddToCart,
-}: ProductCardProps) => {
+}: SaleOffCardProps) => {
   const discountedPrice = product.discount
     ? product.price - (product.price * product.discount) / 100
     : product.price;
@@ -32,7 +31,9 @@ export const ProductCard = ({
     <View style={styles.card}>
       {product.discount && <DiscountTag discount={product.discount} />}
       <Image
-        source={{ uri: `/api/placeholder/160/120` }}
+        source={{
+          uri: `https://i0.wp.com/hatinhtoplist.vn/wp-content/uploads/2022/10/Tiem-banh-sinh-nhat-tai-Ha-Tinh-2.jpg?resize=1200%2C1600&ssl=1`,
+        }}
         style={styles.image}
         resizeMode="cover"
       />
@@ -41,10 +42,10 @@ export const ProductCard = ({
           {product.name}
         </Text>
         <Text style={styles.productCategory} numberOfLines={1}>
-          {product.category}
+          Loại: {product.category}
         </Text>
         <View style={styles.priceContainer}>
-          <View>
+          <View style={styles.priceRow}>
             <Text style={styles.discountedPrice}>
               {discountedPrice.toLocaleString("vi-VN")}đ
             </Text>
@@ -54,6 +55,7 @@ export const ProductCard = ({
               </Text>
             )}
           </View>
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[
@@ -82,84 +84,3 @@ export const ProductCard = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    width: 160,
-    height: 250,
-    margin: 8,
-    borderRadius: 10,
-    overflow: "hidden",
-    elevation: 5,
-    backgroundColor: "white",
-  },
-  image: {
-    width: "100%",
-    height: 120,
-  },
-  cardContent: {
-    flex: 1,
-    padding: 10,
-    justifyContent: "space-between",
-  },
-  productName: {
-    fontWeight: "bold",
-    fontSize: 14,
-  },
-  productCategory: {
-    fontSize: 12,
-    color: "#8F9BB3",
-  },
-  priceContainer: {
-    marginTop: "auto",
-    justifyContent: "space-between",
-  },
-  discountedPrice: {
-    fontWeight: "bold",
-    fontSize: 14,
-    color: "#FF9A3C",
-  },
-  originalPrice: {
-    fontSize: 12,
-    color: "#8F9BB3",
-    textDecorationLine: "line-through",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  favoriteButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  cartButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: "#FF9A3C",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  discountTag: {
-    position: "absolute",
-    top: 8,
-    right: 8,
-    zIndex: 1,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#FF4F4F",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  discountText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 12,
-  },
-});
-
-export default ProductCard;
