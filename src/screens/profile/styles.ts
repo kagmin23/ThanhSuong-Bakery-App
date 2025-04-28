@@ -2,7 +2,7 @@ import { Dimensions, Platform, StyleSheet } from "react-native";
 
 const { width } = Dimensions.get("window");
 const AVATAR_SIZE = 100;
-const HEADER_HEIGHT = 100;
+const HEADER_HEIGHT = 150;
 const USER_INFO_HEIGHT = 180; // Approximate height for avatar + name + verification badge
 
 export const styles = StyleSheet.create({
@@ -37,11 +37,16 @@ export const styles = StyleSheet.create({
     zIndex: 1,
   },
   headerTitle: {
+    marginTop: 50,
     color: "white",
     fontWeight: "bold",
     fontSize: 18,
+    position: "absolute",
+    top: 5,
   },
   backButton: {
+    position: "absolute",
+    top: 18,
     padding: 8,
   },
   avatarSection: {
@@ -131,6 +136,9 @@ export const styles = StyleSheet.create({
     alignItems: "flex-start",
     paddingVertical: 12,
   },
+  infoContentCard: {
+    gap: 11,
+  },
   icon: {
     marginTop: 2,
     marginRight: 12,
@@ -183,7 +191,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoutButton: {
-    paddingVertical: 10,
+    paddingBottom: 7,
     alignItems: "center",
   },
   versionInfo: {

@@ -30,13 +30,13 @@ export const ProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState<ProfileUser>({
     id: "user123",
-    name: "Nguyễn Văn A",
-    phone: "0123 456 789",
-    address: "123 Đường ABC, Quận 1, TP. Hồ Chí Minh",
+    name: "Phan Kang Min",
+    phone: "0342 555 702",
+    address: "Thủ Đức, TP. Hồ Chí Minh",
     avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    dob: new Date(1990, 4, 15), // 15/05/1990
-    create_at: new Date(2023, 2, 10), // 10/03/2023
-    update_at: new Date(2023, 10, 5), // 05/11/2023
+    dob: new Date(2003, 7, 17),
+    create_at: new Date(2023, 2, 10),
+    update_at: new Date(2023, 10, 5),
   });
   const navigation = useNavigation<NavigationProp<RootTabParamList>>();
 
@@ -98,7 +98,7 @@ export const ProfileScreen = () => {
       phone: "0123 456 789",
       address: "Thủ Đức, TP. Hồ Chí Minh",
       avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-      dob: new Date(1990, 4, 15),
+      dob: new Date(2003, 7, 17),
       create_at: new Date(2023, 2, 10),
       update_at: new Date(2023, 10, 5),
     });
@@ -222,7 +222,7 @@ export const ProfileScreen = () => {
           />
           <View style={styles.headerOverlay} />
           <TopNavigation
-            title={() => <Text style={styles.headerTitle}>Hồ Sơ</Text>}
+            title={() => <Text style={styles.headerTitle}>Hồ sơ Cá nhân</Text>}
             alignment="center"
             style={styles.topNavigation}
             accessoryLeft={BackIcon}
@@ -275,6 +275,7 @@ export const ProfileScreen = () => {
             ]}
           >
             <Card style={styles.infoCard}>
+              <View style={styles.infoContentCard}>
               {renderInfoField("person-outline", "Họ tên", "name")}
               {renderInfoField(
                 "call-outline",
@@ -297,6 +298,7 @@ export const ProfileScreen = () => {
                 "default",
                 true
               )}
+              </View>
 
               <View style={styles.metaInfoContainer}>
                 <Text

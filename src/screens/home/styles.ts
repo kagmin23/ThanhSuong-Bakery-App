@@ -6,10 +6,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   header: {
+    position: "absolute",
+    top: 0, // Tùy chỉnh theo kích thước header
+    left: 0,
+    right: 0,
+    zIndex: 10,
   },
   searchContainer: {
     position: "absolute",
-    top: 56, // Tùy chỉnh theo kích thước header
+    top: 110, // Tùy chỉnh theo kích thước header
     left: 0,
     right: 0,
     zIndex: 10,

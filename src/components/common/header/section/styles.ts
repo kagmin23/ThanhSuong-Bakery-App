@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
+    height: 150,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 12,

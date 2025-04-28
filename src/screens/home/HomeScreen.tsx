@@ -100,7 +100,7 @@ export const HomeScreen = () => {
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: 80,
+          paddingTop: 142,
           paddingBottom: insets.bottom + 16,
         }}
         ListEmptyComponent={
