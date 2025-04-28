@@ -26,9 +26,7 @@ export const PaymentModal = ({
       },
       (response) => {
         if (response.didCancel) {
-          console.log("User cancelled image picker");
         } else if (response.errorCode) {
-          console.log("ImagePicker Error: ", response.errorMessage);
         } else if (response.assets && response.assets.length > 0) {
           setSelectedImage(response.assets[0].uri || null);
         }

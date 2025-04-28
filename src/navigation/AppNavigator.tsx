@@ -38,7 +38,7 @@ export const BottomTabsNavigator = () => (
       switch (route.name) {
         case 'Home':
           return <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />;
-        case 'CartTab':
+        case 'Cart':
           return <Ionicons name={focused ? 'cart' : 'cart-outline'} size={size} color={color} />;
         case 'Sale':
           return <Ionicons name={focused ? 'pricetags' : 'pricetags-outline'} size={size} color={color} />;
@@ -55,7 +55,7 @@ export const BottomTabsNavigator = () => (
   })}
 >
   <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Trang chủ' }} />
-  <Tab.Screen name="CartTab" component={CartStackNavigator} />
+  <Tab.Screen name="Cart" component={CartStackNavigator} options={{ title: 'Giỏ hàng'}} />
   <Tab.Screen name="Sale" component={SaleOffScreen} options={{ title: 'Ưu đãi' }} />
   <Tab.Screen name="Shop" component={ShopScreen} options={{ title: 'Cửa hàng' }} />
   <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Hồ sơ' }} />

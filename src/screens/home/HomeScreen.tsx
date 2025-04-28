@@ -1,30 +1,35 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Layout, Text } from "@ui-kitten/components";
-import React, { useState } from "react";
-import { FlatList, StatusBar } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Ionicons } from '@expo/vector-icons';
+import { Layout, Text } from '@ui-kitten/components';
+import React, { useEffect, useState } from 'react';
+import { FlatList, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CategoryPills,
   HeaderBackground,
   HeaderSection,
   ProductCard,
   SearchBar,
-} from "../../components";
-import { notifications } from "../../data/notifications"; // Import notifications
-import { CATEGORIES, SAMPLE_PRODUCTS } from "../../data/products/products";
-import { BakeryProduct } from "../../types/products.types";
-import styles from "./styles";
+} from '../../components';
+import { notifications } from '../../data/notifications';
+import { CATEGORIES, SAMPLE_PRODUCTS } from '../../data/products/products';
+import { Notification } from '../../types/notifications.types';
+import { BakeryProduct } from '../../types/products.types';
+import styles from './styles';
 
 export const HomeScreen = () => {
   const insets = useSafeAreaInsets();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Tất cả");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Tất cả');
   const [products, setProducts] = useState<BakeryProduct[]>(SAMPLE_PRODUCTS);
   const [showAllNotifications, setShowAllNotifications] = useState(false);
+  const [notificationsList, setNotificationsList] = useState<Notification[]>(notifications);
+
+  useEffect(() => {
+  }, [notificationsList]);
 
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
-      selectedCategory === "Tất cả" || product.category === selectedCategory;
+      selectedCategory === 'Tất cả' || product.category === selectedCategory;
     const matchesSearch = product.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -47,23 +52,41 @@ export const HomeScreen = () => {
   const handleNotificationPress = () => {
   };
 
+  const handleNotificationRead = (id: string) => {
+    setNotificationsList(
+      notificationsList.map((notification) =>
+        notification.id === id
+          ? { ...notification, isRead: true }
+          : notification
+      )
+    );
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotificationsList(
+      notificationsList.map((notification) => ({
+        ...notification,
+        isRead: true,
+      }))
+    );
+  };
+
   const toggleShowAllNotifications = () => {
     setShowAllNotifications(!showAllNotifications);
   };
 
   return (
-    <Layout style={[styles.container, { paddingTop: insets.top}]}>
+    <Layout style={[styles.container, { paddingTop: insets.top }]}>
       <StatusBar backgroundColor="#3498db" barStyle="light-content" />
       {/* Header Section */}
       <Layout style={styles.header}>
         <HeaderSection
           name="Phan Kang Min"
           avatarUrl="https://i.pravatar.cc/150?img=12"
-          notifications={notifications.slice(
-            0,
-            showAllNotifications ? notifications.length : 6
-          )}
+          notifications={notificationsList}
           onNotificationPress={handleNotificationPress}
+          onNotificationRead={handleNotificationRead}
+          onMarkAllAsRead={handleMarkAllAsRead}
           showAllNotifications={showAllNotifications}
           toggleShowAllNotifications={toggleShowAllNotifications}
         />
