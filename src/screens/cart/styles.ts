@@ -24,8 +24,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   header: {
+    height: 130,
     backgroundColor: COLORS.primary,
-    padding: 20,
+    padding: 26,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     marginBottom: 16,
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   headerTitle: {
+    marginTop: 35,
     fontSize: 24,
     fontWeight: "bold",
     color: COLORS.white,
@@ -172,16 +174,17 @@ const styles = StyleSheet.create({
     height: 12,
   },
   footer: {
-    backgroundColor: COLORS.white,
-    borderRadius: 12,
-    marginHorizontal: 16,
-    marginTop: 16,
-    padding: 16,
-    shadowColor: COLORS.shadow,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    padding: 20,
+    backgroundColor: "white",
+    borderTopWidth: 0.3,
+    borderTopColor: "#E0E0E0",
+    justifyContent: "flex-end", // Đảm bảo footer luôn ở dưới
+  },
+  footerFixed: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   summaryItem: {
     flexDirection: "row",

@@ -164,7 +164,7 @@ export const CheckoutScreen = ({ route }: Props) => {
   );
 
   return (
-    <Layout style={[styles.container, { paddingTop: insets.top }]}>
+    <Layout style={[styles.container]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Order Summary */}
         <Animated.View style={[styles.section, { opacity: sectionOpacity }]}>

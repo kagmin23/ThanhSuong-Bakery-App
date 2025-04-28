@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: 24,
   },
   section: {
     marginHorizontal: 16,

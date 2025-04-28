@@ -143,35 +143,8 @@ export const CartScreen = () => {
     </View>
   );
 
-  const ListFooterComponent = () =>
-    cartItems.length > 0 ? (
-      <View style={styles.footer}>
-        <View style={styles.summaryItem}>
-          <Text style={styles.summaryLabel}>Tạm tính</Text>
-          <Text style={styles.summaryValue}>
-            {totalPrice.toLocaleString()}đ
-          </Text>
-        </View>
-        <Divider style={styles.divider} />
-        <View style={styles.totalContainer}>
-          <Text style={styles.totalLabel}>Tổng thanh toán</Text>
-          <Text style={styles.totalValue}>
-            {totalPrice.toLocaleString()}đ
-          </Text>
-        </View>
-        <Button
-          style={styles.checkoutButton}
-          onPress={() =>
-            navigation.navigate("Checkout", { cartItems, totalPrice })
-          }
-        >
-          Đặt hàng ngay
-        </Button>
-      </View>
-    ) : null;
-
   return (
-    <Layout style={[styles.container, { paddingTop: insets.top }]}>
+    <Layout style={[styles.container]}>
       <StatusBar backgroundColor="#3498db" barStyle="light-content" />
       <FlatList
         data={cartItems}
@@ -179,9 +152,36 @@ export const CartScreen = () => {
         renderItem={renderItem}
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={renderEmpty}
-        ListFooterComponent={ListFooterComponent}
+        ListFooterComponent={() => (
+          cartItems.length > 0 && (
+            <View style={styles.footer}>
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Tạm tính</Text>
+                <Text style={styles.summaryValue}>
+                  {totalPrice.toLocaleString()}đ
+                </Text>
+              </View>
+              <Divider style={styles.divider} />
+              <View style={styles.totalContainer}>
+                <Text style={styles.totalLabel}>Tổng thanh toán</Text>
+                <Text style={styles.totalValue}>
+                  {totalPrice.toLocaleString()}đ
+                </Text>
+              </View>
+              <Button
+                style={styles.checkoutButton}
+                onPress={() =>
+                  navigation.navigate("Checkout", { cartItems, totalPrice })
+                }
+              >
+                Đặt hàng ngay
+              </Button>
+            </View>
+          )
+        )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         contentContainerStyle={styles.listContent}
+        ListFooterComponentStyle={styles.footerFixed} // Giữ footer cố định
       />
     </Layout>
   );

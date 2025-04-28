@@ -11,6 +11,8 @@ export const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center", // Căn giữa các phần tử trong card
     alignItems: "center", // Căn giữa các phần tử trong card
+    borderWidth: 0.8, // Thêm viền cho Card
+    borderColor: "#E0E0E0", // Màu viền, có thể thay đổi màu theo ý muốn
   },
   image: {
     width: "100%",

@@ -5,13 +5,17 @@ export const styles = StyleSheet.create({
     width: 186,
     height: 250, // Cố định chiều cao
     margin: 10,
+    marginLeft: 10.6,
     borderRadius: 10,
     overflow: "hidden",
     elevation: 5,
     backgroundColor: "white",
     justifyContent: "center", // Căn giữa các phần tử trong card
     alignItems: "center", // Căn giữa các phần tử trong card
+    borderWidth: 0.8, // Thêm viền cho Card
+    borderColor: "#E0E0E0", // Màu viền, có thể thay đổi màu theo ý muốn
   },
+
   image: {
     width: "100%",
     height: 120,
