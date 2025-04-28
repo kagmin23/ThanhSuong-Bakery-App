@@ -42,6 +42,7 @@ export const CheckoutScreen = ({ route }: Props) => {
   const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
   const [isDistanceModalOpen, setIsDistanceModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({}); // Object cho lỗi riêng
 
   // Animation for sections
   const [sectionOpacity] = useState(new Animated.Value(0));
@@ -71,16 +72,19 @@ export const CheckoutScreen = ({ route }: Props) => {
   const handleDeliveryMethodSelect = useCallback((method: 'delivery' | 'pickup') => {
     setDeliveryMethod(method);
     setIsDeliveryModalOpen(false);
+    setErrors({}); // Xóa tất cả lỗi
   }, []);
 
   const handleDistanceSelect = useCallback((value: number) => {
     setDistance(value);
     setIsDistanceModalOpen(false);
+    setErrors((prev) => ({ ...prev, distance: '' })); // Xóa lỗi distance
   }, []);
 
   const handlePaymentMethodSelect = useCallback((method: 'cash' | 'online') => {
     setPaymentMethod(method);
     setIsPaymentModalOpen(false);
+    setErrors({}); // Xóa tất cả lỗi
   }, []);
 
   const getDistanceDisplay = useMemo(() => {
@@ -89,6 +93,37 @@ export const CheckoutScreen = ({ route }: Props) => {
     if (distance <= 3) return '3 - 5 km';
     return '5 - 10 km';
   }, [distance]);
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    const phoneRegex = /^0\d{9,10}$/; // Số điện thoại VN: bắt đầu bằng 0, 10-11 số
+
+    if (deliveryMethod === 'delivery') {
+      if (!recipientName.trim()) {
+        newErrors.recipientName = 'Vui lòng nhập tên người nhận.';
+      }
+      if (!address.trim()) {
+        newErrors.address = 'Vui lòng nhập địa chỉ.';
+      }
+      if (!phone.trim()) {
+        newErrors.phone = 'Vui lòng nhập số điện thoại.';
+      } else if (!phoneRegex.test(phone)) {
+        newErrors.phone = 'Số điện thoại không hợp lệ (phải có 10-11 số, bắt đầu bằng 0).';
+      }
+      if (distance === null) {
+        newErrors.distance = 'Vui lòng chọn khoảng cách giao hàng.';
+      }
+    } else {
+      // Pickup chỉ cần phone
+      if (!phone.trim()) {
+        newErrors.phone = 'Vui lòng nhập số điện thoại.';
+      } else if (!phoneRegex.test(phone)) {
+        newErrors.phone = 'Số điện thoại không hợp lệ (phải có 10-11 số, bắt đầu bằng 0).';
+      }
+    }
+
+    return newErrors;
+  };
 
   const renderItem = ({ item }: { item: CartProduct }) => {
     const hasDiscount = item.discount && item.discount > 0;
@@ -111,19 +146,33 @@ export const CheckoutScreen = ({ route }: Props) => {
   };
 
   const handleConfirm = () => {
-    console.log({
-      cartItems,
-      totalPrice,
-      deliveryMethod,
-      recipientName,
-      address,
-      phone,
-      notes,
-      shippingFee,
-      paymentMethod,
-      selectedImage,
-    });
-    alert('Đơn hàng đã được xác nhận!');
+    const validationErrors = validateForm();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      console.log({
+        cartItems,
+        totalPrice,
+        deliveryMethod,
+        recipientName,
+        address,
+        phone,
+        notes,
+        shippingFee,
+        paymentMethod,
+        selectedImage,
+      });
+      alert('Đơn hàng đã được xác nhận!');
+    }
+  };
+
+  const handlePayment = () => {
+    const validationErrors = validateForm();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      setIsModalVisible(true);
+    }
   };
 
   const renderDropdownModal = (
@@ -199,21 +248,42 @@ export const CheckoutScreen = ({ route }: Props) => {
                   style={styles.input}
                   placeholder="Tên người nhận"
                   value={recipientName}
-                  onChangeText={setRecipientName}
+                  onChangeText={(text) => {
+                    setRecipientName(text);
+                    setErrors((prev) => ({ ...prev, recipientName: '' }));
+                  }}
+                  status={errors.recipientName ? 'danger' : 'basic'}
                 />
+                {errors.recipientName && (
+                  <Text style={styles.errorText}>{errors.recipientName}</Text>
+                )}
                 <Input
                   style={styles.input}
                   placeholder="Địa chỉ"
                   value={address}
-                  onChangeText={setAddress}
+                  onChangeText={(text) => {
+                    setAddress(text);
+                    setErrors((prev) => ({ ...prev, address: '' }));
+                  }}
+                  status={errors.address ? 'danger' : 'basic'}
                 />
+                {errors.address && (
+                  <Text style={styles.errorText}>{errors.address}</Text>
+                )}
                 <Input
                   style={styles.input}
                   placeholder="Số điện thoại"
                   value={phone}
-                  onChangeText={setPhone}
+                  onChangeText={(text) => {
+                    setPhone(text);
+                    setErrors((prev) => ({ ...prev, phone: '' }));
+                  }}
                   keyboardType="phone-pad"
+                  status={errors.phone ? 'danger' : 'basic'}
                 />
+                {errors.phone && (
+                  <Text style={styles.errorText}>{errors.phone}</Text>
+                )}
                 <Input
                   style={styles.input}
                   placeholder="Ghi chú"
@@ -229,6 +299,27 @@ export const CheckoutScreen = ({ route }: Props) => {
                   <Text style={styles.dropdownText}>{getDistanceDisplay}</Text>
                   <Ionicons name="chevron-down" size={20} color="#333333" />
                 </TouchableOpacity>
+                {errors.distance && (
+                  <Text style={styles.errorText}>{errors.distance}</Text>
+                )}
+              </>
+            )}
+            {deliveryMethod === 'pickup' && (
+              <>
+                <Input
+                  style={styles.input}
+                  placeholder="Số điện thoại"
+                  value={phone}
+                  onChangeText={(text) => {
+                    setPhone(text);
+                    setErrors((prev) => ({ ...prev, phone: '' }));
+                  }}
+                  keyboardType="phone-pad"
+                  status={errors.phone ? 'danger' : 'basic'}
+                />
+                {errors.phone && (
+                  <Text style={styles.errorText}>{errors.phone}</Text>
+                )}
               </>
             )}
           </Card>
@@ -274,7 +365,7 @@ export const CheckoutScreen = ({ route }: Props) => {
         {/* Confirm/Payment Button */}
         <Button
           style={styles.confirmButton}
-          onPress={paymentMethod === 'cash' ? handleConfirm : () => setIsModalVisible(true)}
+          onPress={paymentMethod === 'cash' ? handleConfirm : handlePayment}
         >
           {paymentMethod === 'cash' ? 'Xác nhận' : 'Thanh toán'}
         </Button>

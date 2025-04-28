@@ -132,6 +132,15 @@ const styles = StyleSheet.create({
     marginTop: 16,
     borderRadius: 8,
   },
+  errorContainer: {
+    marginHorizontal: 16,
+    marginTop: 12,
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#FF3D71',
+    marginBottom: 4,
+  },
 });
 
 export default styles;
