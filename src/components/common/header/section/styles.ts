@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   greetingText: {
+    marginBottom: 2,
     fontSize: 10,
     color: "#fff",
   },

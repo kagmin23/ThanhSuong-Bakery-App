@@ -43,7 +43,6 @@ export const ProfileScreen = () => {
   // Animations
   const [fadeIn] = useState(new Animated.Value(0));
   const [slideUp] = useState(new Animated.Value(50));
-  const [avatarScale] = useState(new Animated.Value(0.5));
   const [cardSlideIn] = useState(new Animated.Value(30));
 
   useEffect(() => {
@@ -71,7 +70,9 @@ export const ProfileScreen = () => {
       }),
     ];
 
-    Animated.stagger(150, animations).start();
+    Animated.stagger(150, animations).start(() => {
+      console.log('AvatarSection animation completed'); // Debug
+    });
   }, []);
 
   const formatDate = (date: Date): string => {
@@ -80,7 +81,6 @@ export const ProfileScreen = () => {
 
   const handleEditToggle = () => {
     if (isEditing) {
-      // Save user info logic here
       setUserInfo((prev) => ({
         ...prev,
         update_at: new Date(),
@@ -91,7 +91,6 @@ export const ProfileScreen = () => {
   };
 
   const handleCancelEdit = () => {
-    // Reset to original values (this would normally fetch from API)
     setUserInfo({
       id: "userId1",
       name: "Phan Kang Min",
@@ -120,16 +119,13 @@ export const ProfileScreen = () => {
     setUserInfo((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Handle date input (in real app would use DatePicker)
   const handleDateInput = (field: "dob", dateString: string) => {
     try {
-      // Simple validation for dd/MM/yyyy format
       const parts = dateString.split("/");
       if (parts.length === 3) {
         const day = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10) - 1; // JS months are 0-indexed
+        const month = parseInt(parts[1], 10) - 1;
         const year = parseInt(parts[2], 10);
-
         if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
           const newDate = new Date(year, month, day);
           updateUserInfo(field, newDate);
@@ -211,13 +207,13 @@ export const ProfileScreen = () => {
   return (
     <Layout style={styles.container}>
       {/* Fixed Header Section - Doesn't scroll */}
-      <View style={styles.fixedHeaderContainer}>
+      <View style={[styles.fixedHeaderContainer, { zIndex: 10 }]}>
         <Animated.View style={[styles.headerContainer, { opacity: fadeIn }]}>
           <Image
             source={{
               uri: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809",
             }}
-            style={styles.coverImage}
+            style={styles.headerImage}
             resizeMode="cover"
           />
           <View style={styles.headerOverlay} />
@@ -237,6 +233,7 @@ export const ProfileScreen = () => {
               transform: [{ scale: avatarScale }],
             },
           ]}
+          onLayout={() => console.log('AvatarSection rendered')} // Debug
         >
           <Avatar
             source={{ uri: userInfo.avatar }}
@@ -276,28 +273,28 @@ export const ProfileScreen = () => {
           >
             <Card style={styles.infoCard}>
               <View style={styles.infoContentCard}>
-              {renderInfoField("person-outline", "Họ tên", "name")}
-              {renderInfoField(
-                "call-outline",
-                "Số điện thoại",
-                "phone",
-                "phone-pad"
-              )}
-              {renderInfoField(
-                "calendar-outline",
-                "Ngày sinh",
-                "dob",
-                "default",
-                false,
-                true
-              )}
-              {renderInfoField(
-                "location-outline",
-                "Địa chỉ",
-                "address",
-                "default",
-                true
-              )}
+                {renderInfoField("person-outline", "Họ tên", "name")}
+                {renderInfoField(
+                  "call-outline",
+                  "Số điện thoại",
+                  "phone",
+                  "phone-pad"
+                )}
+                {renderInfoField(
+                  "calendar-outline",
+                  "Ngày sinh",
+                  "dob",
+                  "default",
+                  false,
+                  true
+                )}
+                {renderInfoField(
+                  "location-outline",
+                  "Địa chỉ",
+                  "address",
+                  "default",
+                  true
+                )}
               </View>
 
               <View style={styles.metaInfoContainer}>

@@ -36,6 +36,11 @@ export const styles = StyleSheet.create({
     elevation: 0,
     zIndex: 1,
   },
+  headerImage: {
+    width: '100%',
+    height: 200,
+    position: 'absolute',
+  },
   headerTitle: {
     marginTop: 50,
     color: "white",
