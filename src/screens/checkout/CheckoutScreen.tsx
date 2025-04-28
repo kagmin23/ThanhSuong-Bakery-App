@@ -1,81 +1,93 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Ionicons } from '@expo/vector-icons';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import {
-    Button,
-    Divider,
-    IndexPath,
-    Input,
-    Layout,
-    Select,
-    SelectItem,
-    Text,
-} from "@ui-kitten/components";
-import React, { useCallback, useMemo, useState } from "react";
-import { FlatList, Image, ScrollView, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { PaymentModal } from "../../components/modal/checkout";
-import { RootStackParamList } from "../../types/navigation.types";
-import { CartProduct } from "../../types/products.types";
-import styles from "./styles";
+  Button,
+  Card,
+  Divider,
+  Input,
+  Layout,
+  Text,
+} from '@ui-kitten/components';
+import React, { useCallback, useMemo, useState } from 'react';
+import {
+  Animated,
+  FlatList,
+  Image,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { PaymentModal } from '../../components/modal/checkout';
+import { RootStackParamList } from '../../types/navigation.types';
+import { CartProduct } from '../../types/products.types';
+import styles from './styles';
 
-type Props = NativeStackScreenProps<RootStackParamList, "Checkout">;
+type Props = NativeStackScreenProps<RootStackParamList, 'Checkout'>;
 
 export const CheckoutScreen = ({ route }: Props) => {
   const { cartItems, totalPrice } = route.params;
   const insets = useSafeAreaInsets();
 
-  const [deliveryMethod, setDeliveryMethod] = useState<"delivery" | "pickup">(
-    "delivery"
-  );
-  const [recipientName, setRecipientName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [notes, setNotes] = useState("");
-  const [distance, setDistance] = useState<number | null>(null); // Simulated distance
-  const [paymentMethod, setPaymentMethod] = useState<"cash" | "online">("cash");
+  const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
+  const [recipientName, setRecipientName] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
+  const [notes, setNotes] = useState('');
+  const [distance, setDistance] = useState<number | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'online'>('cash');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); // Store selected image URI
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
+  const [isDistanceModalOpen, setIsDistanceModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  const distanceOptions = ["Dưới 3 km", "3 - 5 km", "5 - 10 km"];
+  // Animation for sections
+  const [sectionOpacity] = useState(new Animated.Value(0));
+  React.useEffect(() => {
+    Animated.timing(sectionOpacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  const distanceOptions = [
+    { label: 'Dưới 3 km', value: 1 },
+    { label: '3 - 5 km', value: 3 },
+    { label: '5 - 10 km', value: 5 },
+  ];
 
   const shippingFee = useMemo(() => {
-    if (deliveryMethod === "pickup" || !distance) return 0;
-    if (distance <= 1) return 0; // Dưới 3 km
-    if (distance <= 3) return 10000; // 3 - 5 km
-    return 20000; // 5 - 10 km
+    if (deliveryMethod === 'pickup' || !distance) return 0;
+    if (distance <= 1) return 0;
+    if (distance <= 3) return 10000;
+    return 20000;
   }, [deliveryMethod, distance]);
 
   const totalPayment = totalPrice + shippingFee;
 
-  const handleDeliveryMethodSelect = useCallback(
-    (index: IndexPath | IndexPath[]) => {
-      if ("row" in index) {
-        setDeliveryMethod(index.row === 0 ? "delivery" : "pickup");
-      }
-    },
-    []
-  );
-
-  const handleDistanceSelect = useCallback((index: IndexPath | IndexPath[]) => {
-    if ("row" in index) {
-      const distanceValues = [1, 3, 5]; // Map to Dưới 3 km, 3 - 5 km, 5 - 10 km
-      setDistance(distanceValues[index.row]);
-    }
+  const handleDeliveryMethodSelect = useCallback((method: 'delivery' | 'pickup') => {
+    setDeliveryMethod(method);
+    setIsDeliveryModalOpen(false);
   }, []);
 
-  const handlePaymentMethodSelect = useCallback(
-    (index: IndexPath | IndexPath[]) => {
-      if ("row" in index) {
-        setPaymentMethod(index.row === 0 ? "cash" : "online");
-      }
-    },
-    []
-  );
+  const handleDistanceSelect = useCallback((value: number) => {
+    setDistance(value);
+    setIsDistanceModalOpen(false);
+  }, []);
+
+  const handlePaymentMethodSelect = useCallback((method: 'cash' | 'online') => {
+    setPaymentMethod(method);
+    setIsPaymentModalOpen(false);
+  }, []);
 
   const getDistanceDisplay = useMemo(() => {
-    if (!distance) return "Chọn khoảng cách";
-    if (distance <= 1) return "Dưới 3 km";
-    if (distance <= 3) return "3 - 5 km";
-    return "5 - 10 km";
+    if (!distance) return 'Chọn khoảng cách';
+    if (distance <= 1) return 'Dưới 3 km';
+    if (distance <= 3) return '3 - 5 km';
+    return '5 - 10 km';
   }, [distance]);
 
   const renderItem = ({ item }: { item: CartProduct }) => {
@@ -91,8 +103,7 @@ export const CheckoutScreen = ({ route }: Props) => {
         <View style={styles.itemInfo}>
           <Text style={styles.itemName}>{item.name}</Text>
           <Text style={styles.itemPrice}>
-            {finalPrice.toLocaleString()}đ x {item.quantity} ={" "}
-            {totalItemPrice.toLocaleString()}đ
+            {finalPrice.toLocaleString()}đ x {item.quantity} = {totalItemPrice.toLocaleString()}đ
           </Text>
         </View>
       </View>
@@ -100,7 +111,6 @@ export const CheckoutScreen = ({ route }: Props) => {
   };
 
   const handleConfirm = () => {
-    // Handle order confirmation (e.g., send to backend)
     console.log({
       cartItems,
       totalPrice,
@@ -111,124 +121,193 @@ export const CheckoutScreen = ({ route }: Props) => {
       notes,
       shippingFee,
       paymentMethod,
-      selectedImage, // Include uploaded image URI in confirmation
+      selectedImage,
     });
-    alert("Đơn hàng đã được xác nhận!");
+    alert('Đơn hàng đã được xác nhận!');
   };
+
+  const renderDropdownModal = (
+    isOpen: boolean,
+    onClose: () => void,
+    options: { label: string; value: any }[],
+    onSelect: (value: any) => void,
+    title: string
+  ) => (
+    <Modal
+      visible={isOpen}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>{title}</Text>
+          {options.map((option) => (
+            <TouchableOpacity
+              key={option.label}
+              style={styles.modalItem}
+              onPress={() => onSelect(option.value)}
+            >
+              <Text style={styles.modalItemText}>{option.label}</Text>
+            </TouchableOpacity>
+          ))}
+          <Button
+            style={styles.modalCloseButton}
+            onPress={onClose}
+            appearance="outline"
+          >
+            Đóng
+          </Button>
+        </View>
+      </View>
+    </Modal>
+  );
 
   return (
     <Layout style={[styles.container, { paddingTop: insets.top }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Order Summary */}
-        <View style={styles.section}>
+        <Animated.View style={[styles.section, { opacity: sectionOpacity }]}>
           <Text style={styles.sectionTitle}>Tổng đơn hàng</Text>
-          <FlatList
-            data={cartItems}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-            scrollEnabled={false}
-          />
-        </View>
+          <Card style={styles.card}>
+            <FlatList
+              data={cartItems}
+              keyExtractor={(item) => item.id}
+              renderItem={renderItem}
+              scrollEnabled={false}
+            />
+          </Card>
+        </Animated.View>
 
         {/* Delivery Method */}
-        <View style={styles.section}>
+        <Animated.View style={[styles.section, { opacity: sectionOpacity }]}>
           <Text style={styles.sectionTitle}>Phương thức nhận hàng</Text>
-          <Select
-            style={styles.selectContainer}
-            value={deliveryMethod === "delivery" ? "Ship ngay" : "Ghé tiệm"}
-            onSelect={handleDeliveryMethodSelect}
-          >
-            <SelectItem title="Ship ngay" />
-            <SelectItem title="Ghé tiệm" />
-          </Select>
-
-          {deliveryMethod === "delivery" && (
-            <>
-              <Input
-                style={styles.input}
-                placeholder="Tên người nhận"
-                value={recipientName}
-                onChangeText={setRecipientName}
-              />
-              <Input
-                style={styles.input}
-                placeholder="Địa chỉ"
-                value={address}
-                onChangeText={setAddress}
-              />
-              <Input
-                style={styles.input}
-                placeholder="Số điện thoại"
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-              />
-              <Input
-                style={styles.input}
-                placeholder="Ghi chú"
-                value={notes}
-                onChangeText={setNotes}
-                multiline
-              />
-              <Select
-                style={styles.selectContainer}
-                placeholder="Chọn khoảng cách"
-                value={getDistanceDisplay}
-                onSelect={handleDistanceSelect}
-              >
-                <SelectItem title="Dưới 3 km" />
-                <SelectItem title="3 - 5 km" />
-                <SelectItem title="5 - 10 km" />
-              </Select>
-            </>
-          )}
-        </View>
+          <Card style={styles.card}>
+            <TouchableOpacity
+              style={styles.dropdown}
+              onPress={() => setIsDeliveryModalOpen(true)}
+            >
+              <Ionicons name="car-outline" size={24} color="#3366FF" style={styles.icon} />
+              <Text style={styles.dropdownText}>
+                {deliveryMethod === 'delivery' ? 'Ship ngay' : 'Ghé tiệm'}
+              </Text>
+              <Ionicons name="chevron-down" size={20} color="#333333" />
+            </TouchableOpacity>
+            {deliveryMethod === 'delivery' && (
+              <>
+                <Input
+                  style={styles.input}
+                  placeholder="Tên người nhận"
+                  value={recipientName}
+                  onChangeText={setRecipientName}
+                />
+                <Input
+                  style={styles.input}
+                  placeholder="Địa chỉ"
+                  value={address}
+                  onChangeText={setAddress}
+                />
+                <Input
+                  style={styles.input}
+                  placeholder="Số điện thoại"
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                />
+                <Input
+                  style={styles.input}
+                  placeholder="Ghi chú"
+                  value={notes}
+                  onChangeText={setNotes}
+                  multiline
+                />
+                <TouchableOpacity
+                  style={styles.dropdown}
+                  onPress={() => setIsDistanceModalOpen(true)}
+                >
+                  <Ionicons name="map-outline" size={24} color="#3366FF" style={styles.icon} />
+                  <Text style={styles.dropdownText}>{getDistanceDisplay}</Text>
+                  <Ionicons name="chevron-down" size={20} color="#333333" />
+                </TouchableOpacity>
+              </>
+            )}
+          </Card>
+        </Animated.View>
 
         {/* Payment Method */}
-        <View style={styles.section}>
+        <Animated.View style={[styles.section, { opacity: sectionOpacity }]}>
           <Text style={styles.sectionTitle}>Phương thức thanh toán</Text>
-          <Select
-            style={styles.selectContainer}
-            value={paymentMethod === "cash" ? "Tiền mặt" : "Thanh toán ngay"}
-            onSelect={handlePaymentMethodSelect}
-          >
-            <SelectItem title="Tiền mặt" />
-            <SelectItem title="Thanh toán ngay" />
-          </Select>
-        </View>
+          <Card style={styles.card}>
+            <TouchableOpacity
+              style={styles.dropdown}
+              onPress={() => setIsPaymentModalOpen(true)}
+            >
+              <Ionicons name="card-outline" size={24} color="#3366FF" style={styles.icon} />
+              <Text style={styles.dropdownText}>
+                {paymentMethod === 'cash' ? 'Tiền mặt' : 'Thanh toán ngay'}
+              </Text>
+              <Ionicons name="chevron-down" size={20} color="#333333" />
+            </TouchableOpacity>
+          </Card>
+        </Animated.View>
 
         {/* Summary */}
-        <View style={styles.section}>
+        <Animated.View style={[styles.section, { opacity: sectionOpacity }]}>
           <Text style={styles.sectionTitle}>Tóm tắt thanh toán</Text>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>Tạm tính</Text>
-            <Text style={styles.summaryValue}>
-              {totalPrice.toLocaleString()}đ
-            </Text>
-          </View>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>Phí vận chuyển</Text>
-            <Text style={styles.summaryValue}>
-              {shippingFee.toLocaleString()}đ
-            </Text>
-          </View>
-          <Divider style={styles.divider} />
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>Tổng thanh toán</Text>
-            <Text style={styles.summaryValue}>
-              {totalPayment.toLocaleString()}đ
-            </Text>
-          </View>
-        </View>
+          <Card style={styles.card}>
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryLabel}>Tạm tính</Text>
+              <Text style={styles.summaryValue}>{totalPrice.toLocaleString()}đ</Text>
+            </View>
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryLabel}>Phí vận chuyển</Text>
+              <Text style={styles.summaryValue}>{shippingFee.toLocaleString()}đ</Text>
+            </View>
+            <Divider style={styles.divider} />
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryLabel}>Tổng thanh toán</Text>
+              <Text style={styles.summaryValue}>{totalPayment.toLocaleString()}đ</Text>
+            </View>
+          </Card>
+        </Animated.View>
 
         {/* Confirm/Payment Button */}
         <Button
           style={styles.confirmButton}
-          onPress={paymentMethod === "cash" ? handleConfirm : () => setIsModalVisible(true)}
+          onPress={paymentMethod === 'cash' ? handleConfirm : () => setIsModalVisible(true)}
         >
-          {paymentMethod === "cash" ? "Xác nhận" : "Thanh toán"}
+          {paymentMethod === 'cash' ? 'Xác nhận' : 'Thanh toán'}
         </Button>
       </ScrollView>
+
+      {/* Dropdown Modals */}
+      {renderDropdownModal(
+        isDeliveryModalOpen,
+        () => setIsDeliveryModalOpen(false),
+        [
+          { label: 'Ship ngay', value: 'delivery' },
+          { label: 'Ghé tiệm', value: 'pickup' },
+        ],
+        handleDeliveryMethodSelect,
+        'Chọn phương thức nhận hàng'
+      )}
+      {renderDropdownModal(
+        isDistanceModalOpen,
+        () => setIsDistanceModalOpen(false),
+        distanceOptions,
+        handleDistanceSelect,
+        'Chọn khoảng cách'
+      )}
+      {renderDropdownModal(
+        isPaymentModalOpen,
+        () => setIsPaymentModalOpen(false),
+        [
+          { label: 'Tiền mặt', value: 'cash' },
+          { label: 'Thanh toán ngay', value: 'online' },
+        ],
+        handlePaymentMethodSelect,
+        'Chọn phương thức thanh toán'
+      )}
 
       {/* Payment Modal */}
       <PaymentModal
