@@ -43,6 +43,7 @@ export const ProfileScreen = () => {
   // Animations
   const [fadeIn] = useState(new Animated.Value(0));
   const [slideUp] = useState(new Animated.Value(50));
+  const [avatarScale] = useState(new Animated.Value(1)); // Khởi tạo scale = 1
   const [cardSlideIn] = useState(new Animated.Value(30));
 
   useEffect(() => {
