@@ -168,6 +168,47 @@ const styles = StyleSheet.create({
     color: "#777",
     textAlign: "center",
   },
+  avatarModalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.3)", // Semi-transparent overlay
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+  },
+  avatarModalContainer: {
+    width: 150,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    marginTop: 80, // Position below avatar
+    marginLeft: 16,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  avatarModalButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  avatarModalText: {
+    fontSize: 14,
+    color: "#3eaef4",
+    fontWeight: "600",
+    marginLeft: 8,
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999,
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+  },
 });
 
 export default styles;

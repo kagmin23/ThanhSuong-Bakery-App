@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Layout, Text } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StatusBar } from 'react-native';
+import { FlatList, StatusBar, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CategoryPills,
@@ -10,6 +10,7 @@ import {
   ProductCard,
   SearchBar,
 } from '../../components';
+import { LoadingSpinner } from '../../components/common/loading';
 import { notifications } from '../../data/notifications';
 import { CATEGORIES, SAMPLE_PRODUCTS } from '../../data/products/products';
 import { Notification } from '../../types/notifications.types';
@@ -23,6 +24,7 @@ export const HomeScreen = () => {
   const [products, setProducts] = useState<BakeryProduct[]>(SAMPLE_PRODUCTS);
   const [showAllNotifications, setShowAllNotifications] = useState(false);
   const [notificationsList, setNotificationsList] = useState<Notification[]>(notifications);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
   }, [notificationsList]);
@@ -75,6 +77,10 @@ export const HomeScreen = () => {
     setShowAllNotifications(!showAllNotifications);
   };
 
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+  };
+
   return (
     <Layout style={[styles.container, { paddingTop: insets.top }]}>
       <StatusBar backgroundColor="#3498db" barStyle="light-content" />
@@ -89,6 +95,7 @@ export const HomeScreen = () => {
           onMarkAllAsRead={handleMarkAllAsRead}
           showAllNotifications={showAllNotifications}
           toggleShowAllNotifications={toggleShowAllNotifications}
+          onLogout={handleLogout}
         />
       </Layout>
 
@@ -135,6 +142,14 @@ export const HomeScreen = () => {
           </Layout>
         }
       />
+
+      {/* Full-Screen Loading Spinner */}
+      {isLoggingOut && (
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingOverlay} />
+          <LoadingSpinner />
+        </View>
+      )}
     </Layout>
   );
 };

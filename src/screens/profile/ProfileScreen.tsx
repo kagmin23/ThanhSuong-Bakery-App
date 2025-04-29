@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { CommonActions, NavigationProp, useNavigation } from "@react-navigation/native";
 import {
   Avatar,
   Button,
@@ -106,14 +106,12 @@ export const ProfileScreen = () => {
   };
 
   const handleLogout = () => {
-    Alert.alert("Xác nhận đăng xuất", "Bạn có chắc chắn muốn đăng xuất?", [
-      { text: "Hủy", style: "cancel" },
-      {
-        text: "Đăng xuất",
-        style: "destructive",
-        onPress: () => console.log("User logged out"),
-      },
-    ]);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Login'}]
+      })
+    )
   };
 
   const updateUserInfo = (field: keyof ProfileUser, value: any) => {

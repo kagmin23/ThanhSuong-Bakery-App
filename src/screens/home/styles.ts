@@ -48,6 +48,16 @@ const styles = StyleSheet.create({
     color: "#8F9BB3",
     marginTop: 16,
   },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999, // Highest elevation
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.3)", // Semi-transparent overlay for loading
+  },
 });
 
 export default styles;

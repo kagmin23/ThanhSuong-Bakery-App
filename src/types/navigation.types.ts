@@ -5,6 +5,13 @@ export type RootStackParamList = {
   Checkout: { cartItems: CartProduct[]; totalPrice: number };
 };
 
+export type RootStackLoginParamList = {
+  Login: undefined;
+  Profile: undefined;
+  Register: undefined;
+  MainApp: undefined;
+};
+
 export type RootTabParamList = {
   Home: undefined;
   Cart: undefined;

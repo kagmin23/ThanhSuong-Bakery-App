@@ -26,4 +26,5 @@ export interface HeaderSectionProps {
   onMarkAllAsRead: () => void;
   showAllNotifications: boolean;
   toggleShowAllNotifications: () => void;
+  onLogout: () => void;
 }

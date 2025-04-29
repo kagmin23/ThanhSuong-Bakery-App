@@ -1,13 +1,18 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Text } from "@ui-kitten/components";
 import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
 import React, { useMemo } from "react";
 import { FlatList, Image, Modal, TouchableOpacity, View } from "react-native";
+import { RootStackLoginParamList } from "../../../../types/navigation.types";
 import { HeaderSectionProps } from "../../../../types/notifications.types";
 import styles from "./styles";
 
-export const HeaderSection: React.FC<HeaderSectionProps> = ({
+export const HeaderSection: React.FC<HeaderSectionProps & {
+  onLogout: () => void;
+}> = ({
   name,
   avatarUrl,
   notifications,
@@ -16,19 +21,39 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({
   onMarkAllAsRead,
   showAllNotifications,
   toggleShowAllNotifications,
+  onLogout,
 }) => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackLoginParamList>>();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [isAvatarModalVisible, setIsAvatarModalVisible] = React.useState(false);
 
   // Đếm số thông báo chưa đọc
   const unreadCount = useMemo(() => {
     return notifications.filter((item) => !item.isRead).length;
   }, [notifications]);
 
-  const toggleModal = () => {
+  const toggleNotificationModal = () => {
     setIsModalVisible(!isModalVisible);
     if (isModalVisible) {
       onMarkAllAsRead();
     }
+  };
+
+  const toggleAvatarModal = () => {
+    setIsAvatarModalVisible(!isAvatarModalVisible);
+  };
+
+  const handleProfilePress = () => {
+    toggleAvatarModal();
+    navigation.navigate('Profile');
+  };
+
+  const handleLogoutPress = () => {
+    toggleAvatarModal();
+    onLogout();
+    setTimeout(() => {
+      navigation.replace('Login'); // Replace with actual logout logic if needed
+    }, 1500);
   };
 
   const getNotificationStyle = (type: string) => {
@@ -65,7 +90,12 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({
   return (
     <View style={styles.container}>
       {/* Avatar + Name */}
-      <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+      <TouchableOpacity onPress={toggleAvatarModal} activeOpacity={0.7}>
+        <Image
+          source={{ uri: avatarUrl || "https://toplist.vn/images/800px/nguyen-son-bakery-1161923.jpg" }}
+          style={styles.avatar}
+        />
+      </TouchableOpacity>
       <View style={styles.textContainer}>
         <Text category="s1" style={styles.greetingText}>
           Welcome!
@@ -79,7 +109,7 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => {
-          toggleModal();
+          toggleNotificationModal();
           onNotificationPress();
         }}
         style={styles.notificationIcon}
@@ -97,7 +127,7 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({
         animationType="fade"
         transparent={true}
         visible={isModalVisible}
-        onRequestClose={toggleModal}
+        onRequestClose={toggleNotificationModal}
       >
         <View style={[styles.modalOverlay]}>
           <View style={[styles.modalContainer, { backgroundColor: "#FFFFFF" }]}>
@@ -150,7 +180,6 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({
               )}
             </View>
 
-            {/* Đảm bảo nút "Thu gọn" hoặc "Xem thêm" nằm trong ô */}
             {notifications.length > 5 && (
               <View style={styles.showMoreContainer}>
                 <TouchableOpacity onPress={toggleShowAllNotifications} style={styles.showMoreButton}>
@@ -161,11 +190,36 @@ export const HeaderSection: React.FC<HeaderSectionProps> = ({
               </View>
             )}
 
-            <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+            <TouchableOpacity onPress={toggleNotificationModal} style={styles.closeButton}>
               <MaterialIcons name="close" size={24} color="black" />
             </TouchableOpacity>
           </View>
         </View>
+      </Modal>
+
+      {/* Avatar Popup Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isAvatarModalVisible}
+        onRequestClose={toggleAvatarModal}
+      >
+        <TouchableOpacity
+          style={styles.avatarModalOverlay}
+          activeOpacity={1}
+          onPress={toggleAvatarModal}
+        >
+          <View style={styles.avatarModalContainer}>
+            <TouchableOpacity style={styles.avatarModalButton} onPress={handleProfilePress}>
+              <MaterialIcons name="person" size={20} color="#3eaef4" />
+              <Text style={styles.avatarModalText}>Xem hồ sơ</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.avatarModalButton} onPress={handleLogoutPress}>
+              <MaterialIcons name="logout" size={20} color="#3eaef4" />
+              <Text style={styles.avatarModalText}>Đăng xuất</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       </Modal>
     </View>
   );
