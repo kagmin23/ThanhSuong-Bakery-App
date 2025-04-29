@@ -136,10 +136,29 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 12,
   },
-  errorText: {
+  errorName: {
     fontSize: 14,
+    marginTop: -5,
     color: '#FF3D71',
-    marginBottom: 4,
+    marginBottom: 25,
+  },
+  errorPhone: {
+    fontSize: 14,
+    marginTop: -5,
+    color: '#FF3D71',
+    marginBottom: 25,
+  },
+  errorAddress: {
+    fontSize: 14,
+    marginTop: -5,
+    color: '#FF3D71',
+    marginBottom: 25,
+  },
+  errorDistance: {
+    fontSize: 14,
+    marginTop: -5,
+    color: '#FF3D71',
+    marginBottom: 25,
   },
 });
 

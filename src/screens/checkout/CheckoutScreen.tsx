@@ -1,5 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Ionicons } from "@expo/vector-icons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import {
   Button,
   Card,
@@ -7,8 +7,8 @@ import {
   Input,
   Layout,
   Text,
-} from '@ui-kitten/components';
-import React, { useCallback, useMemo, useState } from 'react';
+} from "@ui-kitten/components";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Animated,
   FlatList,
@@ -17,26 +17,28 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { PaymentModal } from '../../components/modal/checkout';
-import { RootStackParamList } from '../../types/navigation.types';
-import { CartProduct } from '../../types/products.types';
-import styles from './styles';
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { PaymentModal } from "../../components/modal/checkout";
+import { RootStackParamList } from "../../types/navigation.types";
+import { CartProduct } from "../../types/products.types";
+import styles from "./styles";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Checkout'>;
+type Props = NativeStackScreenProps<RootStackParamList, "Checkout">;
 
 export const CheckoutScreen = ({ route }: Props) => {
   const { cartItems, totalPrice } = route.params;
   const insets = useSafeAreaInsets();
 
-  const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
-  const [recipientName, setRecipientName] = useState('');
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('');
-  const [notes, setNotes] = useState('');
+  const [deliveryMethod, setDeliveryMethod] = useState<"delivery" | "pickup">(
+    "delivery"
+  );
+  const [recipientName, setRecipientName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [notes, setNotes] = useState("");
   const [distance, setDistance] = useState<number | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'online'>('cash');
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "online">("cash");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
@@ -55,13 +57,13 @@ export const CheckoutScreen = ({ route }: Props) => {
   }, []);
 
   const distanceOptions = [
-    { label: 'Dưới 3 km', value: 1 },
-    { label: '3 - 5 km', value: 3 },
-    { label: '5 - 10 km', value: 5 },
+    { label: "Dưới 3 km", value: 1 },
+    { label: "3 - 5 km", value: 3 },
+    { label: "5 - 10 km", value: 5 },
   ];
 
   const shippingFee = useMemo(() => {
-    if (deliveryMethod === 'pickup' || !distance) return 0;
+    if (deliveryMethod === "pickup" || !distance) return 0;
     if (distance <= 1) return 0;
     if (distance <= 3) return 10000;
     return 20000;
@@ -69,56 +71,61 @@ export const CheckoutScreen = ({ route }: Props) => {
 
   const totalPayment = totalPrice + shippingFee;
 
-  const handleDeliveryMethodSelect = useCallback((method: 'delivery' | 'pickup') => {
-    setDeliveryMethod(method);
-    setIsDeliveryModalOpen(false);
-    setErrors({}); // Xóa tất cả lỗi
-  }, []);
+  const handleDeliveryMethodSelect = useCallback(
+    (method: "delivery" | "pickup") => {
+      setDeliveryMethod(method);
+      setIsDeliveryModalOpen(false);
+      setErrors({}); // Xóa tất cả lỗi
+    },
+    []
+  );
 
   const handleDistanceSelect = useCallback((value: number) => {
     setDistance(value);
     setIsDistanceModalOpen(false);
-    setErrors((prev) => ({ ...prev, distance: '' })); // Xóa lỗi distance
+    setErrors((prev) => ({ ...prev, distance: "" })); // Xóa lỗi distance
   }, []);
 
-  const handlePaymentMethodSelect = useCallback((method: 'cash' | 'online') => {
+  const handlePaymentMethodSelect = useCallback((method: "cash" | "online") => {
     setPaymentMethod(method);
     setIsPaymentModalOpen(false);
     setErrors({}); // Xóa tất cả lỗi
   }, []);
 
   const getDistanceDisplay = useMemo(() => {
-    if (!distance) return 'Chọn khoảng cách';
-    if (distance <= 1) return 'Dưới 3 km';
-    if (distance <= 3) return '3 - 5 km';
-    return '5 - 10 km';
+    if (!distance) return "Chọn khoảng cách";
+    if (distance <= 1) return "Dưới 3 km";
+    if (distance <= 3) return "3 - 5 km";
+    return "5 - 10 km";
   }, [distance]);
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
     const phoneRegex = /^0\d{9,10}$/; // Số điện thoại VN: bắt đầu bằng 0, 10-11 số
 
-    if (deliveryMethod === 'delivery') {
+    if (deliveryMethod === "delivery") {
       if (!recipientName.trim()) {
-        newErrors.recipientName = 'Vui lòng nhập tên người nhận.';
+        newErrors.recipientName = "Vui lòng nhập tên người nhận!";
       }
       if (!address.trim()) {
-        newErrors.address = 'Vui lòng nhập địa chỉ.';
+        newErrors.address = "Vui lòng nhập địa chỉ!";
       }
       if (!phone.trim()) {
-        newErrors.phone = 'Vui lòng nhập số điện thoại.';
+        newErrors.phone = "Vui lòng nhập số điện thoại!";
       } else if (!phoneRegex.test(phone)) {
-        newErrors.phone = 'Số điện thoại không hợp lệ (phải có 10-11 số, bắt đầu bằng 0).';
+        newErrors.phone =
+          "Số điện thoại không hợp lệ (phải có 10-11 số, bắt đầu bằng 0)!";
       }
       if (distance === null) {
-        newErrors.distance = 'Vui lòng chọn khoảng cách giao hàng.';
+        newErrors.distance = "Vui lòng chọn khoảng cách giao hàng!";
       }
     } else {
       // Pickup chỉ cần phone
       if (!phone.trim()) {
-        newErrors.phone = 'Vui lòng nhập số điện thoại.';
+        newErrors.phone = "Vui lòng nhập số điện thoại!";
       } else if (!phoneRegex.test(phone)) {
-        newErrors.phone = 'Số điện thoại không hợp lệ (phải có 10-11 số, bắt đầu bằng 0).';
+        newErrors.phone =
+          "Số điện thoại không hợp lệ (phải có 10-11 số, bắt đầu bằng 0).";
       }
     }
 
@@ -138,7 +145,8 @@ export const CheckoutScreen = ({ route }: Props) => {
         <View style={styles.itemInfo}>
           <Text style={styles.itemName}>{item.name}</Text>
           <Text style={styles.itemPrice}>
-            {finalPrice.toLocaleString()}đ x {item.quantity} = {totalItemPrice.toLocaleString()}đ
+            {finalPrice.toLocaleString()}đ x {item.quantity} ={" "}
+            {totalItemPrice.toLocaleString()}đ
           </Text>
         </View>
       </View>
@@ -162,7 +170,7 @@ export const CheckoutScreen = ({ route }: Props) => {
         paymentMethod,
         selectedImage,
       });
-      alert('Đơn hàng đã được xác nhận!');
+      alert("Đơn hàng đã được xác nhận!");
     }
   };
 
@@ -236,13 +244,18 @@ export const CheckoutScreen = ({ route }: Props) => {
               style={styles.dropdown}
               onPress={() => setIsDeliveryModalOpen(true)}
             >
-              <Ionicons name="car-outline" size={24} color="#3366FF" style={styles.icon} />
+              <Ionicons
+                name="car-outline"
+                size={24}
+                color="#3366FF"
+                style={styles.icon}
+              />
               <Text style={styles.dropdownText}>
-                {deliveryMethod === 'delivery' ? 'Ship ngay' : 'Ghé tiệm'}
+                {deliveryMethod === "delivery" ? "Ship ngay" : "Ghé tiệm"}
               </Text>
               <Ionicons name="chevron-down" size={20} color="#333333" />
             </TouchableOpacity>
-            {deliveryMethod === 'delivery' && (
+            {deliveryMethod === "delivery" && (
               <>
                 <Input
                   style={styles.input}
@@ -250,12 +263,23 @@ export const CheckoutScreen = ({ route }: Props) => {
                   value={recipientName}
                   onChangeText={(text) => {
                     setRecipientName(text);
-                    setErrors((prev) => ({ ...prev, recipientName: '' }));
+                    setErrors((prev) => ({ ...prev, recipientName: "" }));
                   }}
-                  status={errors.recipientName ? 'danger' : 'basic'}
+                  status={errors.recipientName ? "danger" : "basic"}
                 />
                 {errors.recipientName && (
-                  <Text style={styles.errorText}>{errors.recipientName}</Text>
+                  <Text style={styles.errorName}>
+                    <Text style={{ color: "red", fontSize: 20 }}>* </Text>
+                    <Text
+                      style={{
+                        fontStyle: "italic",
+                        color: "red",
+                        fontSize: 13,
+                      }}
+                    >
+                      {errors.recipientName}
+                    </Text>
+                  </Text>
                 )}
                 <Input
                   style={styles.input}
@@ -263,12 +287,23 @@ export const CheckoutScreen = ({ route }: Props) => {
                   value={address}
                   onChangeText={(text) => {
                     setAddress(text);
-                    setErrors((prev) => ({ ...prev, address: '' }));
+                    setErrors((prev) => ({ ...prev, address: "" }));
                   }}
-                  status={errors.address ? 'danger' : 'basic'}
+                  status={errors.address ? "danger" : "basic"}
                 />
                 {errors.address && (
-                  <Text style={styles.errorText}>{errors.address}</Text>
+                  <Text style={styles.errorAddress}>
+                    <Text style={{ color: "red", fontSize: 20 }}>* </Text>
+                    <Text
+                      style={{
+                        fontStyle: "italic",
+                        color: "red",
+                        fontSize: 13,
+                      }}
+                    >
+                      {errors.address}
+                    </Text>
+                  </Text>
                 )}
                 <Input
                   style={styles.input}
@@ -276,17 +311,28 @@ export const CheckoutScreen = ({ route }: Props) => {
                   value={phone}
                   onChangeText={(text) => {
                     setPhone(text);
-                    setErrors((prev) => ({ ...prev, phone: '' }));
+                    setErrors((prev) => ({ ...prev, phone: "" }));
                   }}
                   keyboardType="phone-pad"
-                  status={errors.phone ? 'danger' : 'basic'}
+                  status={errors.phone ? "danger" : "basic"}
                 />
                 {errors.phone && (
-                  <Text style={styles.errorText}>{errors.phone}</Text>
+                  <Text style={styles.errorPhone}>
+                    <Text style={{ color: "red", fontSize: 20 }}>* </Text>
+                    <Text
+                      style={{
+                        fontStyle: "italic",
+                        color: "red",
+                        fontSize: 13,
+                      }}
+                    >
+                      {errors.phone}
+                    </Text>
+                  </Text>
                 )}
                 <Input
                   style={styles.input}
-                  placeholder="Ghi chú"
+                  placeholder="Ghi chú (nếu có..)"
                   value={notes}
                   onChangeText={setNotes}
                   multiline
@@ -295,16 +341,32 @@ export const CheckoutScreen = ({ route }: Props) => {
                   style={styles.dropdown}
                   onPress={() => setIsDistanceModalOpen(true)}
                 >
-                  <Ionicons name="map-outline" size={24} color="#3366FF" style={styles.icon} />
+                  <Ionicons
+                    name="map-outline"
+                    size={24}
+                    color="#3366FF"
+                    style={styles.icon}
+                  />
                   <Text style={styles.dropdownText}>{getDistanceDisplay}</Text>
                   <Ionicons name="chevron-down" size={20} color="#333333" />
                 </TouchableOpacity>
                 {errors.distance && (
-                  <Text style={styles.errorText}>{errors.distance}</Text>
+                  <Text style={styles.errorDistance}>
+                    <Text style={{ color: "red", fontSize: 20 }}>* </Text>
+                    <Text
+                      style={{
+                        fontStyle: "italic",
+                        color: "red",
+                        fontSize: 13,
+                      }}
+                    >
+                      {errors.distance}
+                    </Text>{" "}
+                  </Text>
                 )}
               </>
             )}
-            {deliveryMethod === 'pickup' && (
+            {deliveryMethod === "pickup" && (
               <>
                 <Input
                   style={styles.input}
@@ -312,13 +374,24 @@ export const CheckoutScreen = ({ route }: Props) => {
                   value={phone}
                   onChangeText={(text) => {
                     setPhone(text);
-                    setErrors((prev) => ({ ...prev, phone: '' }));
+                    setErrors((prev) => ({ ...prev, phone: "" }));
                   }}
                   keyboardType="phone-pad"
-                  status={errors.phone ? 'danger' : 'basic'}
+                  status={errors.phone ? "danger" : "basic"}
                 />
                 {errors.phone && (
-                  <Text style={styles.errorText}>{errors.phone}</Text>
+                  <Text style={styles.errorPhone}>
+                    <Text style={{ color: "red", fontSize: 20 }}>* </Text>
+                    <Text
+                      style={{
+                        fontStyle: "italic",
+                        color: "red",
+                        fontSize: 13,
+                      }}
+                    >
+                      {errors.phone}
+                    </Text>
+                  </Text>
                 )}
               </>
             )}
@@ -333,9 +406,14 @@ export const CheckoutScreen = ({ route }: Props) => {
               style={styles.dropdown}
               onPress={() => setIsPaymentModalOpen(true)}
             >
-              <Ionicons name="card-outline" size={24} color="#3366FF" style={styles.icon} />
+              <Ionicons
+                name="card-outline"
+                size={24}
+                color="#3366FF"
+                style={styles.icon}
+              />
               <Text style={styles.dropdownText}>
-                {paymentMethod === 'cash' ? 'Tiền mặt' : 'Thanh toán ngay'}
+                {paymentMethod === "cash" ? "Tiền mặt" : "Thanh toán ngay"}
               </Text>
               <Ionicons name="chevron-down" size={20} color="#333333" />
             </TouchableOpacity>
@@ -348,16 +426,22 @@ export const CheckoutScreen = ({ route }: Props) => {
           <Card style={styles.card}>
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>Tạm tính</Text>
-              <Text style={styles.summaryValue}>{totalPrice.toLocaleString()}đ</Text>
+              <Text style={styles.summaryValue}>
+                {totalPrice.toLocaleString()}đ
+              </Text>
             </View>
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>Phí vận chuyển</Text>
-              <Text style={styles.summaryValue}>{shippingFee.toLocaleString()}đ</Text>
+              <Text style={styles.summaryValue}>
+                {shippingFee.toLocaleString()}đ
+              </Text>
             </View>
             <Divider style={styles.divider} />
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>Tổng thanh toán</Text>
-              <Text style={styles.summaryValue}>{totalPayment.toLocaleString()}đ</Text>
+              <Text style={styles.summaryValue}>
+                {totalPayment.toLocaleString()}đ
+              </Text>
             </View>
           </Card>
         </Animated.View>
@@ -365,9 +449,9 @@ export const CheckoutScreen = ({ route }: Props) => {
         {/* Confirm/Payment Button */}
         <Button
           style={styles.confirmButton}
-          onPress={paymentMethod === 'cash' ? handleConfirm : handlePayment}
+          onPress={paymentMethod === "cash" ? handleConfirm : handlePayment}
         >
-          {paymentMethod === 'cash' ? 'Xác nhận' : 'Thanh toán'}
+          {paymentMethod === "cash" ? "Xác nhận" : "Thanh toán"}
         </Button>
       </ScrollView>
 
@@ -376,28 +460,28 @@ export const CheckoutScreen = ({ route }: Props) => {
         isDeliveryModalOpen,
         () => setIsDeliveryModalOpen(false),
         [
-          { label: 'Ship ngay', value: 'delivery' },
-          { label: 'Ghé tiệm', value: 'pickup' },
+          { label: "Ship ngay", value: "delivery" },
+          { label: "Ghé tiệm", value: "pickup" },
         ],
         handleDeliveryMethodSelect,
-        'Chọn phương thức nhận hàng'
+        "Chọn phương thức nhận hàng"
       )}
       {renderDropdownModal(
         isDistanceModalOpen,
         () => setIsDistanceModalOpen(false),
         distanceOptions,
         handleDistanceSelect,
-        'Chọn khoảng cách'
+        "Chọn khoảng cách"
       )}
       {renderDropdownModal(
         isPaymentModalOpen,
         () => setIsPaymentModalOpen(false),
         [
-          { label: 'Tiền mặt', value: 'cash' },
-          { label: 'Thanh toán ngay', value: 'online' },
+          { label: "Tiền mặt", value: "cash" },
+          { label: "Thanh toán ngay", value: "online" },
         ],
         handlePaymentMethodSelect,
-        'Chọn phương thức thanh toán'
+        "Chọn phương thức thanh toán"
       )}
 
       {/* Payment Modal */}
