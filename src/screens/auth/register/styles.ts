@@ -95,9 +95,6 @@ export default StyleSheet.create({
     fontSize: 14,
     color: "#3eaef4",
     fontWeight: "600",
-    textShadowColor: "rgba(255, 255, 255, 0.5)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
   loadingContainer: {
     ...StyleSheet.absoluteFillObject,
@@ -109,4 +106,28 @@ export default StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0, 0, 0, 0.3)", // Semi-transparent overlay for loading
   },
+  errorName: {
+    color: 'white',
+    marginBottom: 25,
+    alignSelf: "flex-start",
+    marginTop: -15
+  },
+  errorPhone: {
+    color: 'white',
+    marginBottom: 25,
+    alignSelf: "flex-start",
+    marginTop: -15
+  },
+  errorPassword: {
+    color: 'white',
+    marginBottom: 25,
+    alignSelf: "flex-start",
+    marginTop: -15
+  },
+  errorConfirmPassword: {
+    color: 'white',
+    marginBottom: 25,
+    alignSelf: "flex-start",
+    marginTop: -15
+  }
 });

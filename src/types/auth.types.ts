@@ -4,7 +4,9 @@ export interface Login {
 }
 
 export interface Register {
+    name: string;
     phone: string;
     password: string;
+    address?: string;
     confirm_password: string;
 }

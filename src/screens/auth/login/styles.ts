@@ -106,4 +106,16 @@ export default StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0, 0, 0, 0.3)", // Semi-transparent overlay for loading
   },
+  errorPhone: {
+    color: 'white',
+    marginBottom: 30,
+    alignSelf: "flex-start",
+    marginTop: -15
+  },
+  errorPassword: {
+    color: 'white',
+    marginBottom: 20,
+    alignSelf: "flex-start",
+    marginTop: -15,
+  }
 });
