@@ -3,23 +3,23 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Icon } from "@ui-kitten/components";
 import React, { useState } from "react";
 import {
-    ImageBackground,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { LoadingSpinner } from "../../../components/common/loading";
 import { Register } from "../../../types/auth.types";
-import { RootStackLoginParamList } from "../../../types/navigation.types";
+import { RootStackParamList } from "../../../types/navigation.types";
 import styles from "./styles";
 
 export const RegisterScreen = () => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackLoginParamList>>();
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [form, setForm] = useState<Register>({
     name: "",

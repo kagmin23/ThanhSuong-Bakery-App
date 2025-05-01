@@ -6,7 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
 import React, { useMemo } from "react";
 import { FlatList, Image, Modal, TouchableOpacity, View } from "react-native";
-import { RootStackLoginParamList } from "../../../../types/navigation.types";
+import { RootStackParamList } from "../../../../types/navigation.types";
 import { HeaderSectionProps } from "../../../../types/notifications.types";
 import styles from "./styles";
 
@@ -23,7 +23,7 @@ export const HeaderSection: React.FC<HeaderSectionProps & {
   toggleShowAllNotifications,
   onLogout,
 }) => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackLoginParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [isAvatarModalVisible, setIsAvatarModalVisible] = React.useState(false);
 

@@ -1,6 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { RootStackParamList } from "../../../../types/navigation.types";
 import { BakeryProduct } from "../../../../types/products.types";
 import { styles } from "./styles";
 
@@ -23,16 +26,25 @@ export const ProductCard = ({
   onToggleFavorite,
   onAddToCart,
 }: ProductCardProps) => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const discountedPrice = product.discount
     ? product.price - (product.price * product.discount) / 100
     : product.price;
 
+  const handleProductDetails = () => {
+    navigation.navigate("ProductDetails", {
+      product,
+      onToggleFavorite,
+      onAddToCart,
+    });
+  }
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={handleProductDetails} activeOpacity={0.8}>
       {product.discount && <DiscountTag discount={product.discount} />}
       <Image
         source={{
-          uri: `https://i0.wp.com/hatinhtoplist.vn/wp-content/uploads/2022/10/Tiem-banh-sinh-nhat-tai-Ha-Tinh-2.jpg?resize=1200%2C1600&ssl=1`,
+          uri: product.imageUrl || `https://i0.wp.com/hatinhtoplist.vn/wp-content/uploads/2022/10/Tiem-banh-sinh-nhat-tai-Ha-Tinh-2.jpg?resize=1200%2C1600&ssl=1`,
         }}
         style={styles.image}
         resizeMode="cover"
@@ -44,6 +56,8 @@ export const ProductCard = ({
         <Text style={styles.productCategory} numberOfLines={1}>
           Loại: {product.category}
         </Text>
+
+        <Text style={[styles.viewMore, { fontStyle: 'italic'}]}>Bấm vào để xem chi tiết..</Text>
         <View style={styles.priceContainer}>
           <View style={styles.priceRow}>
             <Text style={styles.discountedPrice}>
@@ -81,7 +95,7 @@ export const ProductCard = ({
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

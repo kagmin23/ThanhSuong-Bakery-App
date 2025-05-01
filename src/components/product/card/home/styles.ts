@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   card: {
     width: 186,
-    height: 250, // Cố định chiều cao
+    height: 260, // Cố định chiều cao
     margin: 10,
     marginLeft: 10.6,
     borderRadius: 10,
@@ -56,6 +56,11 @@ export const styles = StyleSheet.create({
     color: "#8F9BB3",
     textDecorationLine: "line-through",
     marginLeft: 8,
+  },
+  viewMore: {
+    color: "gray",
+    fontSize: 10,
+    marginTop: 5
   },
   buttonContainer: {
     flexDirection: "row",

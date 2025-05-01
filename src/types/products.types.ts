@@ -2,6 +2,7 @@ export interface BakeryProduct {
     id: string;
     name: string;
     category: string;
+    description?: string;
     imageUrl: string;
     price: number;
     discount?: number;

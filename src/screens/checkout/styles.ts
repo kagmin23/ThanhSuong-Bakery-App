@@ -30,11 +30,11 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     flexDirection: 'row',
-    marginBottom: 12,
+    paddingVertical: 5,
   },
   itemImage: {
-    width: 60,
-    height: 60,
+    width: 100,
+    height: 100,
     borderRadius: 8,
     marginRight: 12,
   },

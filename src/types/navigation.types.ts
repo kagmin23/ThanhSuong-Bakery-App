@@ -1,15 +1,29 @@
-import { CartProduct } from "./products.types";
+import { BakeryProduct } from "./products.types";
 
-export type RootStackParamList = {
-  Cart: undefined;
-  Checkout: { cartItems: CartProduct[]; totalPrice: number };
+export type CartProduct = {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  category: string; // Add missing property
+  imageUrl: string; // Add missing property
 };
 
-export type RootStackLoginParamList = {
+export type RootStackParamList = {
   Login: undefined;
-  Profile: undefined;
   Register: undefined;
   MainApp: undefined;
+  Home: undefined;
+  Cart: undefined;
+  Checkout: { cartItems: CartProduct[]; totalPrice: number };
+  Sale: undefined;
+  Shop: undefined;
+  Profile: undefined;
+  ProductDetails: {
+    product: BakeryProduct;
+    onToggleFavorite: (id: string) => void;
+    onAddToCart: (id: string) => void;
+  };
 };
 
 export type RootTabParamList = {
